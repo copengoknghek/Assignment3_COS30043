@@ -3,7 +3,7 @@
     <h1 class="h2 mb-3">Fashion API</h1>
     <p class="text-muted mb-4">Live women’s fashion items from an external API with search, filtering, and pagination.</p>
 
-    <div class="card p-3 mb-4">
+    <div class="card p-3 mb-4 fashion-search-card">
       <div class="row g-3">
         <div class="col-12 col-md-6">
           <input
@@ -12,6 +12,7 @@
             type="text"
             class="form-control"
             placeholder="Search by title, brand, or category..."
+            
           />
         </div>
         <div class="col-12 col-md-3">
@@ -30,11 +31,7 @@
       </div>
     </div>
 
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
+    <LoadingSpinner v-if="loading" />
 
     <div v-else-if="error" class="alert alert-danger">
       {{ error }}
@@ -82,6 +79,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
 
 const fashionItems = ref([])
 const loading = ref(false)
@@ -217,5 +215,10 @@ onMounted(() => {
 
 :root[data-theme='dark'] .fashion-image-wrap {
   background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .fashion-search-card {
+  background: #000000;
+  border-color: #3a3a3a;
 }
 </style>

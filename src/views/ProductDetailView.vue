@@ -35,12 +35,14 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ProductList from '../components/ProductList.vue'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
+import { useNotificationStore } from '../stores/notification'
 import { useProductStore } from '../stores/product'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const notificationStore = useNotificationStore()
 const productStore = useProductStore()
 
 const product = computed(() => productStore.getById(route.params.id))
@@ -52,14 +54,22 @@ const related = computed(() => {
     .slice(0, 4)
 })
 
-function handleAdd() {
-  if (!authStore.isAuthenticated || !product.value) {
+function handleAdd(selectedProduct) {
+  const targetProduct = selectedProduct || product.value
+
+  if (!authStore.isAuthenticated || !targetProduct) {
+    notificationStore.info('Please login first to add items to cart.')
     router.push('/login')
     return
   }
 
   cartStore.setActiveUser(authStore.currentUser?.email)
-  cartStore.addToCart(product.value)
+  const result = cartStore.addToCart(targetProduct)
+  if (result?.status === 'exists') {
+    notificationStore.info(`${targetProduct.name} is already in your cart. Quantity: ${result.quantity}`)
+  } else {
+    notificationStore.success(`${targetProduct.name} added to cart.`)
+  }
 }
 
 function handleLike() {

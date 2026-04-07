@@ -14,7 +14,7 @@
       @update:max-price="maxPrice = $event"
     />
 
-    <div v-if="loading" class="alert alert-info">Loading products...</div>
+    <LoadingSpinner v-if="loading" />
 
     <div v-else-if="!filteredProducts.length" class="alert alert-warning">
       No product found. Try different filters.
@@ -64,12 +64,15 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import ProductList from '../components/ProductList.vue'
 import SearchBar from '../components/SearchBar.vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
+import { useNotificationStore } from '../stores/notification'
 import { useProductStore } from '../stores/product'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const notificationStore = useNotificationStore()
 const productStore = useProductStore()
 const router = useRouter()
 
@@ -128,13 +131,18 @@ function nextPage() {
 
 function handleAddToCart(product) {
   if (!authStore.isAuthenticated) {
-    alert('Please login first to add items to cart.')
+    notificationStore.info('Please login first to add items to cart.')
     router.push('/login')
     return
   }
 
   cartStore.setActiveUser(authStore.currentUser?.email)
-  cartStore.addToCart(product)
+  const result = cartStore.addToCart(product)
+  if (result?.status === 'exists') {
+    notificationStore.info(`${product.name} is already in your cart. Quantity: ${result.quantity}`)
+  } else {
+    notificationStore.success(`${product.name} added to cart.`)
+  }
 }
 
 function handleLike(product) {

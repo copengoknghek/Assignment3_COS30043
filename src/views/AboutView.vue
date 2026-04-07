@@ -8,7 +8,7 @@
 
     <div class="row g-4 align-items-start">
       <div class="col-12 col-md-6">
-        <div class="card p-3 p-md-4">
+        <div class="card p-3 p-md-4 personal-intro-card">
           <h2 class="h5 mb-3">Personal Introduction</h2>
 
           <div class="mb-3">
@@ -64,7 +64,7 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="card p-3 p-md-4">
+        <div class="card p-3 p-md-4 outfit-preview-card">
           <h2 class="h5 mb-3">Outfit Preview</h2>
 
           <img
@@ -100,3 +100,41 @@ const displayName = computed(() => {
   return full || 'Guest User'
 })
 </script>
+
+<style scoped>
+:root[data-theme='dark'] .personal-intro-card {
+  background: #000000;
+  border-color: #3a3a3a;
+  color: #ffffff;
+}
+
+:root[data-theme='dark'] .personal-intro-card .form-label,
+:root[data-theme='dark'] .personal-intro-card .form-check-label,
+:root[data-theme='dark'] .personal-intro-card legend,
+:root[data-theme='dark'] .personal-intro-card p,
+:root[data-theme='dark'] .personal-intro-card h2 {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .personal-intro-card .form-control {
+  background-color: #111111;
+  border-color: #4a4a4a;
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .personal-intro-card .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+
+:root[data-theme='dark'] .outfit-preview-card {
+  background: #000000;
+  border-color: #3a3a3a;
+}
+
+:root[data-theme='dark'] .outfit-preview-card h2,
+:root[data-theme='dark'] .outfit-preview-card p,
+:root[data-theme='dark'] .outfit-preview-card .text-body-secondary {
+  color: #ffffff !important;
+}
+</style>

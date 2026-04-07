@@ -14,6 +14,7 @@
       />
 
       <div class="cart-summary card p-3 mt-3">
+        <p class="mb-1">Items: {{ cartStore.totalItems }}</p>
         <h5 class="mb-2">Total: ${{ cartStore.totalPrice.toFixed(2) }}</h5>
         <button class="btn btn-success" @click="handleCheckout">Checkout</button>
       </div>

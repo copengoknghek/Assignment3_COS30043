@@ -13,8 +13,14 @@ export const useCartStore = defineStore('cart', () => {
   const activeEmail = ref('guest')
 
   const items = computed(() => cartsByUser.value[activeEmail.value] || [])
+  const totalItems = computed(() =>
+    items.value.reduce((sum, item) => sum + Number(item.quantity || 0), 0),
+  )
   const totalPrice = computed(() =>
-    items.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    items.value.reduce(
+      (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0),
+      0,
+    ),
   )
 
   watch(
@@ -38,17 +44,19 @@ export const useCartStore = defineStore('cart', () => {
 
     if (existed) {
       existed.quantity += 1
+      cartsByUser.value[activeEmail.value] = userCart
+      return { status: 'exists', quantity: existed.quantity }
     } else {
       userCart.push({
         id: product.id,
         name: product.name,
-        price: product.price,
+        price: Number(product.price || 0),
         image: product.image,
         quantity: 1,
       })
+      cartsByUser.value[activeEmail.value] = userCart
+      return { status: 'added', quantity: 1 }
     }
-
-    cartsByUser.value[activeEmail.value] = userCart
   }
 
   function updateQuantity(productId, quantity) {
@@ -71,6 +79,7 @@ export const useCartStore = defineStore('cart', () => {
 
   return {
     items,
+    totalItems,
     totalPrice,
     setActiveUser,
     addToCart,
